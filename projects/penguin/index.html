@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laya's Penguin Paradise — Fun Math & Typing for Kids</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --ocean-dark: #0a1931;
+            --ocean-mid: #142850;
+            --ocean-light: #1b3a5c;
+            --ice-blue: #d9eaf7;
+            --penguin-pink: #ed6699;
+            --penguin-pink-light: #f4a0be;
+            --orange: #f5a623;
+            --orange-dark: #e0911a;
+            --green: #33d964;
+            --gold: #ffd700;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--ocean-dark);
+            color: var(--white);
+            overflow-x: hidden;
+        }
+
+        /* Snowflakes */
+        .snowflakes {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: fall linear infinite;
+        }
+        @keyframes fall {
+            to { transform: translateY(110vh) rotate(360deg); }
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: linear-gradient(180deg, var(--ocean-light) 0%, var(--ocean-dark) 60%, #061224 100%);
+            padding: 2rem;
+            z-index: 1;
+        }
+
+        .hero-glow {
+            position: absolute;
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(237,102,153,0.15) 0%, transparent 70%);
+            top: 10%; left: 50%;
+            transform: translateX(-50%);
+            z-index: 0;
+        }
+
+        .app-icon {
+            width: 180px; height: 180px;
+            border-radius: 36px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 80px rgba(237,102,153,0.2);
+            margin-bottom: 2rem;
+            z-index: 1;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            z-index: 1;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--orange) 50%, var(--penguin-pink) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
+        }
+
+        .hero .subtitle {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--ice-blue);
+            margin-bottom: 2rem;
+            z-index: 1;
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, var(--green) 0%, #28c057 100%);
+            color: white;
+            font-family: 'Nunito', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 800;
+            padding: 18px 40px;
+            border-radius: 16px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 8px 30px rgba(51,217,100,0.3);
+            transition: all 0.2s ease;
+            z-index: 1;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(51,217,100,0.4);
+        }
+
+        .download-btn svg {
+            width: 24px; height: 24px;
+            fill: white;
+        }
+
+        .hero-badge {
+            margin-top: 1.2rem;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.5);
+            z-index: 1;
+        }
+
+        /* Screenshots Section */
+        .screenshots {
+            position: relative;
+            padding: 5rem 2rem;
+            background: linear-gradient(180deg, #061224 0%, var(--ocean-dark) 100%);
+            z-index: 1;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.4rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            color: var(--ice-blue);
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .screenshot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .screenshot-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .screenshot-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+
+        .screenshot-card img {
+            width: 100%;
+            display: block;
+        }
+
+        .screenshot-card .caption {
+            padding: 1.2rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--ice-blue);
+        }
+
+        /* Features Section */
+        .features {
+            position: relative;
+            padding: 5rem 2rem;
+            background: var(--ocean-dark);
+            z-index: 1;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .feature-icon {
+            width: 56px; height: 56px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.2rem;
+            font-weight: 800;
+            margin-bottom: 0.6rem;
+        }
+
+        .feature-card p {
+            font-size: 0.95rem;
+            color: rgba(255,255,255,0.65);
+            line-height: 1.6;
+        }
+
+        .fi-pink { background: rgba(237,102,153,0.2); }
+        .fi-orange { background: rgba(245,166,35,0.2); }
+        .fi-green { background: rgba(51,217,100,0.2); }
+        .fi-blue { background: rgba(100,180,255,0.2); }
+        .fi-gold { background: rgba(255,215,0,0.2); }
+        .fi-purple { background: rgba(150,100,220,0.2); }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 5rem 2rem;
+            background: linear-gradient(180deg, var(--ocean-dark) 0%, var(--ocean-mid) 100%);
+            z-index: 1;
+            position: relative;
+        }
+
+        .steps {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .step {
+            text-align: center;
+            flex: 1;
+            min-width: 180px;
+            max-width: 250px;
+        }
+
+        .step-number {
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--orange) 0%, var(--penguin-pink) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 900;
+            margin: 0 auto 1rem;
+            box-shadow: 0 8px 25px rgba(245,166,35,0.3);
+        }
+
+        .step h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .step p {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.6);
+            line-height: 1.5;
+        }
+
+        /* Fun Facts Ticker */
+        .facts-bar {
+            background: rgba(255,255,255,0.04);
+            border-top: 1px solid rgba(255,255,255,0.06);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            padding: 1rem 0;
+            overflow: hidden;
+            z-index: 1;
+            position: relative;
+        }
+
+        .facts-track {
+            display: flex;
+            gap: 4rem;
+            animation: scroll-left 30s linear infinite;
+            width: max-content;
+        }
+
+        @keyframes scroll-left {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .fact-item {
+            white-space: nowrap;
+            font-size: 0.95rem;
+            color: var(--ice-blue);
+            font-weight: 600;
+        }
+
+        .fact-item span {
+            color: var(--penguin-pink);
+            margin-right: 8px;
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: 6rem 2rem;
+            text-align: center;
+            background: linear-gradient(180deg, var(--ocean-mid) 0%, var(--ocean-dark) 100%);
+            z-index: 1;
+            position: relative;
+        }
+
+        .cta h2 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+        }
+
+        .cta p {
+            font-size: 1.2rem;
+            color: var(--ice-blue);
+            margin-bottom: 2rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Footer */
+        footer {
+            padding: 2rem;
+            text-align: center;
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.3);
+            background: #050e1a;
+            z-index: 1;
+            position: relative;
+        }
+
+        footer a {
+            color: var(--penguin-pink-light);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.4rem; }
+            .hero .subtitle { font-size: 1.1rem; }
+            .section-title { font-size: 1.8rem; }
+            .screenshot-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Snowflakes -->
+<div class="snowflakes" id="snowflakes"></div>
+
+<!-- Hero -->
+<section class="hero">
+    <div class="hero-glow"></div>
+    <img src="icon.png" alt="Laya's Penguin Paradise" class="app-icon">
+    <h1>Laya's Penguin Paradise</h1>
+    <p class="subtitle">The fun way for kids to learn math and typing!</p>
+    <a href="#download" class="download-btn">
+        <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+        Download for Mac
+    </a>
+    <p class="hero-badge">Free &middot; macOS 15+ &middot; No internet required</p>
+</section>
+
+<!-- Screenshots -->
+<section class="screenshots" id="screenshots">
+    <h2 class="section-title">See It In Action</h2>
+    <p class="section-subtitle">Race your penguin across ice chunks by answering questions. Get it right and jump ahead — get it wrong and splash!</p>
+    <div class="screenshot-grid">
+        <div class="screenshot-card">
+            <img src="screenshot-menu.png" alt="Main Menu">
+            <div class="caption">Pick your mode: Multiplication, Voice Math, or Typing</div>
+        </div>
+        <div class="screenshot-card">
+            <img src="screenshot-race.png" alt="Race Gameplay">
+            <div class="caption">Race against 3 AI penguins across the ice!</div>
+        </div>
+        <div class="screenshot-card">
+            <img src="screenshot-setup.png" alt="Player Setup">
+            <div class="caption">Choose your penguin color, name, and difficulty</div>
+        </div>
+        <div class="screenshot-card">
+            <img src="screenshot-results.png" alt="Results Screen">
+            <div class="caption">See your stats: time, accuracy, and streaks</div>
+        </div>
+    </div>
+</section>
+
+<!-- Features -->
+<section class="features">
+    <h2 class="section-title">Packed With Fun</h2>
+    <p class="section-subtitle">Everything a kid needs to practice math and typing while having a blast</p>
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon fi-pink">&#x1F9E9;</div>
+            <h3>Multiplication Mode</h3>
+            <p>Pick your times tables (2s through 10s or Mixed) and type your answers. Perfect for building math fluency!</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon fi-orange">&#x1F3A4;</div>
+            <h3>Voice Math Mode</h3>
+            <p>Say your answers out loud! Uses Apple's speech recognition so kids who can't type yet can still play.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon fi-blue">&#x2328;&#xFE0F;</div>
+            <h3>Typing Practice</h3>
+            <p>Practice home row, top row, bottom row, or all keys. Letters appear and you race to press them!</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon fi-green">&#x1F3C1;</div>
+            <h3>Race Against AI</h3>
+            <p>Compete against 3 penguin opponents — Frosty, Waddles, and Chilly. Easy, Medium, or Hard difficulty.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon fi-gold">&#x1F4CA;</div>
+            <h3>Track Your Progress</h3>
+            <p>See your time, correct answers, missed answers, best streak, and letters per minute after every race.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon fi-purple">&#x1F427;</div>
+            <h3>Customize Your Penguin</h3>
+            <p>Pick from 6 colors, choose a fun name, and make the penguin yours. 25 fun penguin facts to discover!</p>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works -->
+<section class="how-it-works">
+    <h2 class="section-title">How To Play</h2>
+    <p class="section-subtitle">Jump from ice chunk to ice chunk by answering correctly!</p>
+    <div class="steps">
+        <div class="step">
+            <div class="step-number">1</div>
+            <h3>Pick Your Mode</h3>
+            <p>Choose Multiplication, Voice Math, or Typing from the main menu</p>
+        </div>
+        <div class="step">
+            <div class="step-number">2</div>
+            <h3>Customize</h3>
+            <p>Pick your penguin color, type your name, and choose your challenge level</p>
+        </div>
+        <div class="step">
+            <div class="step-number">3</div>
+            <h3>Race!</h3>
+            <p>Answer questions to jump across ice. Wrong answers splash you in the water!</p>
+        </div>
+        <div class="step">
+            <div class="step-number">4</div>
+            <h3>Win!</h3>
+            <p>Beat the AI penguins to the finish line and celebrate with confetti!</p>
+        </div>
+    </div>
+</section>
+
+<!-- Fun Facts Ticker -->
+<div class="facts-bar">
+    <div class="facts-track">
+        <div class="fact-item"><span>&#x2744;</span> Penguins can hold their breath for 20 minutes!</div>
+        <div class="fact-item"><span>&#x2744;</span> A group of penguins on land is called a waddle!</div>
+        <div class="fact-item"><span>&#x2744;</span> Penguins slide on their bellies — it's called tobogganing!</div>
+        <div class="fact-item"><span>&#x2744;</span> Penguins can swim up to 22 miles per hour!</div>
+        <div class="fact-item"><span>&#x2744;</span> Baby penguins are called chicks and they're super fluffy!</div>
+        <div class="fact-item"><span>&#x2744;</span> Rockhopper penguins hop over rocks!</div>
+        <div class="fact-item"><span>&#x2744;</span> Penguins can recognize family by their unique calls!</div>
+        <div class="fact-item"><span>&#x2744;</span> There are 18 different species of penguins!</div>
+        <!-- Duplicate for seamless scroll -->
+        <div class="fact-item"><span>&#x2744;</span> Penguins can hold their breath for 20 minutes!</div>
+        <div class="fact-item"><span>&#x2744;</span> A group of penguins on land is called a waddle!</div>
+        <div class="fact-item"><span>&#x2744;</span> Penguins slide on their bellies — it's called tobogganing!</div>
+        <div class="fact-item"><span>&#x2744;</span> Penguins can swim up to 22 miles per hour!</div>
+        <div class="fact-item"><span>&#x2744;</span> Baby penguins are called chicks and they're super fluffy!</div>
+        <div class="fact-item"><span>&#x2744;</span> Rockhopper penguins hop over rocks!</div>
+        <div class="fact-item"><span>&#x2744;</span> Penguins can recognize family by their unique calls!</div>
+        <div class="fact-item"><span>&#x2744;</span> There are 18 different species of penguins!</div>
+    </div>
+</div>
+
+<!-- CTA -->
+<section class="cta" id="download">
+    <h2>Ready to Race?</h2>
+    <p>Download Laya's Penguin Paradise and start learning while having fun!</p>
+    <a href="#" class="download-btn">
+        <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+        Download for Mac
+    </a>
+    <p class="hero-badge" style="margin-top: 1.2rem;">Version 1.0 &middot; Requires macOS 15 or later</p>
+</section>
+
+<!-- Footer -->
+<footer>
+    <p>Made with &#x2764; for Laya &middot; &copy; 2026 Laya's Penguin Paradise</p>
+</footer>
+
+<!-- Snowflake Generator -->
+<script>
+    const container = document.getElementById('snowflakes');
+    for (let i = 0; i < 50; i++) {
+        const flake = document.createElement('div');
+        flake.className = 'snowflake';
+        const size = Math.random() * 5 + 2;
+        flake.style.width = size + 'px';
+        flake.style.height = size + 'px';
+        flake.style.left = Math.random() * 100 + '%';
+        flake.style.animationDuration = Math.random() * 8 + 6 + 's';
+        flake.style.animationDelay = Math.random() * 10 + 's';
+        flake.style.opacity = Math.random() * 0.5 + 0.2;
+        container.appendChild(flake);
+    }
+</script>
+
+</body>
+</html>
